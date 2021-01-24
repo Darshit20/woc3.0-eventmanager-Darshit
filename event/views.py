@@ -64,7 +64,7 @@ def participantsReg(request):
             return render(request, 'participants.html', events)
 
 
-        client = Client()
+        #client = Client()
         message = client.messages \
             .create(
             body="""\nThank you"""+participants.name+""" for registering your participation with us.
