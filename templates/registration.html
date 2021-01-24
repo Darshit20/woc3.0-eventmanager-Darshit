@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container my-4">
+  <div class="row d-flex justify-content-center align-items-center">
+    <div class="col-md-5 border rounded" style="background:#f8f9fa">
+      <form method="post" action="event-registration" enctype="multipart/form-data" novalidate class="m-3" >
+        {% csrf_token %}
+
+        <h4 class="mb-3">Event Registration</h4>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="eName">Name <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" id="eName" placeholder="Event Name" name="eName" value="" >
+                      <p style="color: red;" id="evMsg"></p>
+
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="eLocation">Location <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" id="eLocation" name="eLocation" placeholder="Event Location" value="">
+                      <p style="color: red;" id="locMsg"></p>
+
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-group">
+            <label for="edesc">Description <span style="color: red;">*</span></label>
+            <textarea class="form-control" id="eDesc" name="eDesc" rows="3" placeholder="Event Description"></textarea>
+          </div>
+                    <p style="color: red;" id="desMsg"></p>
+
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Start Date <span style="color: red;">*</span></label>
+            <div class="input-group">
+              <input type="datetime-local" class="form-control" id="eStdate" name="eStdate">
+
+            </div>
+
+
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>End Date <span style="color: red;">*</span></label>
+            <div class="input-group">
+              <input type="datetime-local" class="form-control" id="eEndate" name="eEndate" >
+            </div>
+
+
+          </div>
+           <p style="color: red;" id="timingMsg"></p>
+        </div>
+
+
+        <div class="mb-3">
+          <label>Registration Deadline <span style="color: red;">*</span></label>
+          <div class="input-group">
+            <input type="datetime-local" class="form-control" id="eRegdl" name="eRegdl" >
+          </div>
+          <p style="color: red;" id="dlMsg"></p>
+        </div>
+        <div class="mb-3">
+          <label for="eposter">Event Poster <span style="color: red;">*</span></label>
+          <input class="form-control" type="file" id="ePoster" accept="image/*" name="ePoster">
+        </div>
+
+        <div class="mb-3">
+          <label for="hEmail">Email <span style="color: red;">*</span></label>
+          <input type="email" class="form-control" id="hEmail" name="hEmail" placeholder="you@example.com">
+          <p style="color: red;" id="emailMsg"></p>
+        </div>
+
+        <div class="mb-3">
+          <label for="psw">Password <span style="color: red;">*</span></label>
+          <input type="password" name="psw" id="psw" class="form-control"  placeholder="Password" title="Must contains 6 or more characters with at least one number, one uppercase and one special characters">
+        </div>
+
+        <div class="mb-3">
+          <label>Confirm Password <span style="color: red;">*</span></label>
+          <input type="password" placeholder="Confirm Password" class="form-control" id="cpsw">
+          <p style="color: red;" id="pwdMsg"></p>
+        </div>
+
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" onclick="return chkValidation();" type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function chkValidation()
+{
+    var name=document.getElementById('eName').value;
+    var loc=document.getElementById('eLocation').value;
+    var des=document.getElementById('eDesc').value;
+    var sdate=document.getElementById('eStdate').value;
+    var edate=document.getElementById('eEndate').value;
+    var dldate=document.getElementById('eRegdl').value;
+    var poster=document.getElementById('ePoster').value;
+    var mail=document.getElementById('hEmail').value;
+    var psw=document.getElementById('psw').value;
+    var cpsw=document.getElementById('cpsw').value;
+
+    var current = new Date();
+    var emailval = /^([a-zA-Z0-9]+)([a-zA-Z.\d]*)@([a-zA-Z]{2,10})\.([a-zA-Z]{2,10})(\.[a-zA-Z]{2,10})?$/;
+    var pswval = /(?=.*\d)(?=.*[a-zA-Z]).{6,}/;
+    var nameval = /^[a-zA-Z\s]{3,50}$/;
+    var locval = /^[a-zA-Z\s]{5,50}$/;
+    var selectedDate = new Date(sdate)
+    var selectedDL = new Date(dldate)
+
+     var flag=true;
+     if(name=="")
+     {
+        document.getElementById('eName').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('eName').style.cssText="border:;box-shadow:;";
+        flag=true;
+     }
+
+     if(!nameval.test(name))
+     {
+        document.getElementById('eName').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        document.getElementById('evMsg').innerHTML="Please enter only alphabetical letters (5-50).";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('eName').style.cssText="border:;box-shadow:;";
+        document.getElementById('evMsg').innerHTML="";
+        flag=true;
+     }
+
+     if(loc=="")
+     {
+        document.getElementById('eLocation').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('eLocation').style.cssText="border:;box-shadow:;";
+        flag=true;
+     }
+
+     if(!locval.test(loc))
+     {
+         document.getElementById('eLocation').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        document.getElementById('locMsg').innerHTML="Please enter only alphabetical letters (5-50).";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('eLocation').style.cssText="border:;box-shadow:;";
+        document.getElementById('locMsg').innerHTML="";
+        flag=true;
+     }
+     if(des=="")
+     {
+        document.getElementById('eDesc').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('eDesc').style.cssText="border:;box-shadow:;";
+        flag=true;
+     }
+
+    if(sdate=="" || edate=="" || dldate=="")
+    {
+
+      document.getElementById('eStdate').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;"
+      document.getElementById('eEndate').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;"
+      document.getElementById('eRegdl').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;"
+      flag = false;
+    }
+    else
+    {
+      if(selectedDate > current)
+      {
+         document.getElementById('eStdate').style.cssText="border:;box-shadow:;";
+         document.getElementById('dlMsg').innerHTML="";
+        if(sdate < edate)
+        {
+          document.getElementById('eStdate').style.cssText="border:;box-shadow:;";
+          document.getElementById('eEndate').style.cssText="border:;box-shadow:;";
+          document.getElementById('dlMsg').innerHTML="";
+          if(sdate > dldate)
+          {
+            document.getElementById('eRegdl').style.cssText="border:;box-shadow:;";
+            document.getElementById('dlMsg').innerHTML="";
+            flag = true
+          }
+          else
+          {
+            document.getElementById('eRegdl').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+            document.getElementById('dlMsg').innerHTML="Registration deadline should not be greater than Starting date ";
+            flag = false;
+          }
+        }
+        else
+        {
+          document.getElementById('eStdate').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+          document.getElementById('eEndate').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+          document.getElementById('dlMsg').innerHTML="Event Starting Date should not be greater than ending date ";
+          flag = false;
+        }
+      }
+      else
+      {
+        document.getElementById('eStdate').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        document.getElementById('dlMsg').innerHTML="Event Starting Date should be greater than current date ";
+        flag = false;
+      }
+    }
+
+
+
+     if(poster=="")
+     {
+        document.getElementById('ePoster').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('ePoster').style.cssText="border:;box-shadow:;";
+        flag=true;
+     }
+
+
+     if(pswval.test(psw)==false)
+     {
+        if(psw!="")
+        {
+          document.getElementById('pwdMsg').innerHTML= "Please match the criteria";
+          document.getElementById('psw').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        }
+        else
+          document.getElementById('psw').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        flag=false;
+     }
+     else
+     {
+          if(psw != cpsw)
+         {
+            document.getElementById('pwdMsg').innerHTML= "Password not matched";
+            document.getElementById('cpsw').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+            flag=false;
+         }
+         else
+         {
+            document.getElementById('pwdMsg').innerHTML= "";
+            document.getElementById('cpsw').style.cssText="border:;box-shadow:;";
+            document.getElementById('psw').style.cssText="border:;box-shadow:;";
+
+            flag=true;
+         }
+     }
+     if(emailval.test(mail)==false)
+     {
+        if(mail == "")
+          document.getElementById('hEmail').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        else
+        {
+          document.getElementById('emailMsg').innerHTML= "Invalid Email";
+        }
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('hEmail').style.cssText="border:;box-shadow:;";
+        document.getElementById('emailMsg').innerHTML= "";
+        flag=true;
+     }
+
+      if(flag==false)
+        return false;
+      else
+      {
+          if(nameval.test(name) && locval.test(loc) && des!="" && sdate!="" && edate!="" && dldate!="" && sdate<edate && dldate < sdate && selectedDate > current && selectedDL > current && poster!="" && mail!="" && emailval.test(mail) && psw!="" && cpsw!="" && psw == cpsw && pswval.test(psw))
+          {
+            return true;
+          }
+          else
+            return false;
+      }
+}
+</script>
+
+{% endblock %}

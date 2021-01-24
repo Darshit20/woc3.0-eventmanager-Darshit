@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="row mb-2 ">
+    {% for event in events %}
+     <div class="card mx-3" style="width: 18rem;">
+        <img src="{{event.event_poster.url}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{event.event_name}}</h5>
+          <h6 class="card-text">Description : {{event.event_desc}}</h6>
+          <h6 class="card-text">Location : {{event.event_loc}}</h6>
+          <h6 class="card-text">Start Date :{{event.event_stdate}}</h6>
+          <h6 class="card-text">End Date :{{event.event_endate}}</h6>
+
+        </div>
+     </div>
+     {% endfor %}
+  </div>
+</div>
+
+
+<label style="color: red;">{{error}}</label>
+<div class="container my-4">
+  <div class="row d-flex justify-content-center align-items-center">
+    <div class="col-md-5 border rounded" style="background:#f8f9fa">
+      <form method="post" action="participants-registration" enctype="multipart/form-data"  class="m-3" >
+        {% csrf_token %}
+        <h4 class="mb-3">Participants Registration</h4>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="pname">Name <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" id="pname" placeholder="Full Name" value="" name="pname">
+            <p style="color: red;" id="nameMsg"></p>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="pcontact">Contact Number <span style="color: red;">*</span></label>
+            <input type="number" class="form-control" id="pcontact" placeholder="Enter Contact" value="" name="pcontact" min="0">
+            <p style="color: red;" id="conMsg"></p>
+        </div>
+
+        <div class="mb-3">
+          <label>Email <span style="color: red;">*</span></label>
+          <input type="email" class="form-control" id="pemail"  name="pemail" placeholder="you@example.com">
+          <p style="color: red;" id="emailMsg"></p>
+        </div>
+
+
+          <div class="row">
+            <label class="mb-3">Events <span style="color: red;">*</span></label>
+
+              {% for event in events %}
+                  <div class="mb-3 col-md-6">
+                    <input class="form-check-input" type="radio" name="event" id={{event.id}} value={{event.id}} checked>
+                    <label class="form-check-label" >
+                      {{event.event_name}}
+                    </label>
+                  </div>
+              {% empty %}
+                  <p style="color: red;">Sorry!! There are no events</p>
+              {% endfor %}
+
+
+
+          </div>
+
+
+
+        <div class="row">
+          <label class="mb-3">Registration Type <span style="color: red;">*</span></label>
+          <div class="mb-3 col-md-6">
+            <input class="form-check-input" type="radio" name="regtype" id="individual" checked value="individual" onclick="chkRadio(this);">
+            <label class="form-check-label" >
+              Individual
+            </label>
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <input class="form-check-input" type="radio" name="regtype" id="group" value="group" onclick="chkRadio(this);">
+            <label>
+              Group
+            </label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="tot">No of Person <span style="color: red;">*</span></label>
+          <input type="number" class="form-control" id="tot" placeholder="Number" name="tot" value="1" min="1" readOnly>
+          <p style="color: red;" id="totperson"></p>
+        </div>
+
+
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="return chkValidation();">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+function chkRadio(myRadio)
+{
+  var txtBox = document.getElementById("tot");
+
+  if(myRadio.value == "individual")
+  {
+    txtBox.min=1;
+    txtBox.value = 1;
+    txtBox.readOnly = true;
+  }
+  else
+  {
+    txtBox.value = 2;
+    txtBox.min=2;
+    txtBox.readOnly = false;
+  }
+}
+function chkValidation()
+{
+   var name=document.getElementById('pname').value;
+   var contact = document.getElementById('pcontact').value;
+   var mail=document.getElementById('pemail').value;
+   var tot = document.getElementById("tot").value;
+   var group = document.getElementById('group');
+
+  var emailval = /^([a-zA-Z0-9]+)([a-zA-Z.\d]*)@([a-zA-Z]{2,10})\.([a-zA-Z]{2,10})(\.[a-zA-Z]{2,10})?$/;
+  var nameval = /^[a-zA-Z\s]{5,50}$/;
+  var contactval = /^[0-9]{10}$/
+
+     var flag=true;
+
+     if(name=="")
+     {
+        document.getElementById('pname').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('pname').style.cssText="border:;box-shadow:;";
+        flag=true;
+     }
+
+     if(!nameval.test(name))
+     {
+        document.getElementById('pname').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        document.getElementById('nameMsg').innerHTML="Please enter only alphabetical letters (5-50).";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('pname').style.cssText="border:;box-shadow:;";
+        document.getElementById('nameMsg').innerHTML="";
+        flag=true;
+     }
+
+     if(!contactval.test(contact))
+     {
+        document.getElementById('pcontact').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        document.getElementById('conMsg').innerHTML="Invald Number";
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('pcontact').style.cssText="border:;box-shadow:;";
+        document.getElementById('conMsg').innerHTML="";
+        flag=true;
+     }
+      if(group.checked == true)
+      {
+          if(tot=="" || tot<2)
+          {
+            document.getElementById('tot').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+            flag=false;
+          }
+          else
+          {
+             document.getElementById('tot').style.cssText="border:;box-shadow:;";
+             flag=true;
+          }
+      }
+      else
+      {
+          document.getElementById('tot').style.cssText="border:;box-shadow:;";
+      }
+     if(emailval.test(mail)==false)
+     {
+        if(mail == "")
+          document.getElementById('pemail').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
+        else
+        {
+          document.getElementById('emailMsg').innerHTML= "Invalid Email";
+        }
+        flag=false;
+     }
+     else
+     {
+        document.getElementById('pemail').style.cssText="border:;box-shadow:;";
+        document.getElementById('emailMsg').innerHTML= "";
+        flag=true;
+     }
+
+      if(flag==false)
+        return false;
+      else
+      {
+          if(nameval.test(name) && mail!="" && emailval.test(mail) && contactval.test(contact) && tot!="")
+          {
+             if(group.checked)
+             {
+                if(tot=="" || tot<2)
+                {
+                  return false;
+                }
+                else
+                  return true;
+             }
+             else
+                return true;
+          }
+          else
+            return false;
+      }
+}
+</script>
+
+{% endblock %}
