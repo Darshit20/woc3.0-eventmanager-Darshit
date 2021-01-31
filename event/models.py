@@ -1,4 +1,6 @@
 from django.db import models
+from argon2 import PasswordHasher
+import bcrypt
 
 # Create your models here.
 class EventReg(models.Model):
@@ -15,6 +17,23 @@ class EventReg(models.Model):
     def __str__(self):
         return self.event_name
 
+    def datestart(self):
+        return self.event_stdate.strftime('%a %d %b')
+
+    def dateend(self):
+        return self.event_endate.strftime('%a %d %b')
+
+    def timestart(self):
+        return self.event_stdate.strftime('%I:%M %p')
+
+    def timeend(self):
+        return self.event_endate.strftime('%I:%M %p')
+
+    def verifylogin(self, raw_password):
+        try:
+            return PasswordHasher().verify(self.event_host_pwd.encode('utf-8'), raw_password)
+        except:
+            return False
 
 class Participant(models.Model):
     name = models.CharField(max_length=255)

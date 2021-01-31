@@ -5,40 +5,45 @@ Home
 {% endblock title %}
 {% block content %}
 {% load static %}
-<div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"></li>
-    <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"></li>
+<div class="container-fluid p-0">
+    <div id="carouselExampleCaptions" class="carousel slide carousel-fade col-md-auto" data-bs-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"></li>
+        <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"></li>
 
-  </ol>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="/static/images/pic1.jpeg" class="d-block w-100 " alt="...">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Are you a gamer?</h5>
-        <p>Be a participant and win exciting prizes in different events.</p>
-        <a href="event-registration" class="btn btn-primary">Organize Your eSport Event</a>
-        <a href="participants-registration" class="btn btn-danger">Participate in Events</a>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="{% static 'images/pic2.png' %}" class="d-block w-100" alt="...">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Do you want to organize a eSport event?</h5>
-        <p>Register yourself and organize successful events.</p>
-         <a href="event-registration" class="btn btn-primary">Organize Your eSport Event</a>
-        <a href="participants-registration" class="btn btn-danger">Participate in Events</a>
-      </div>
-    </div>
+      </ol>
 
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="/static/images/pic1.jpeg" class="d-block img-responsive" style="width:100%; height:100vh;" alt="...">
+          <div class="carousel-caption d-md-block">
+            <h5>Are you a gamer?</h5>
+            <p>Be a participant and win exciting prizes in different events.</p>
+            <a href="event-registration" class="btn btn-primary">Organize Your eSport Event</a>
+            <a href="participants-registration" class="btn btn-danger">Participate in Events</a>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'images/pic2.png' %}" class="d-block img-responsive" style="width:100%; height:100vh;" alt="...">
+          <div class="carousel-caption d-md-block">
+            <h5>Do you want to organize a eSport event?</h5>
+            <p>Register yourself and organize successful events.</p>
+            <a href="event-registration" class="btn btn-primary">Organize Your eSport Event</a>
+            <a href="participants-registration" class="btn btn-danger">Participate in Events</a>
+          </div>
+        </div>
+
+      </div>
+      <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </a>
+    </div>
   </div>
-  <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </a>
 </div>
+
 {% endblock %}

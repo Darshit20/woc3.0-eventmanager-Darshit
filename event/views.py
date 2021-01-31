@@ -7,8 +7,12 @@ from django.conf import settings
 import os
 from twilio.rest import Client
 from django.contrib import messages
-
+from argon2 import PasswordHasher
+from django.core.exceptions import ObjectDoesNotExist
 import datetime
+
+
+
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
@@ -25,27 +29,23 @@ def eventReg(request):
         event.event_deadline = request.POST['eRegdl']
         event.event_poster = request.FILES['ePoster']
         event.event_host_email = request.POST['hEmail']
-        event.event_host_pwd = request.POST['psw']
+
+        encpwd = PasswordHasher().hash(request.POST['psw'].encode('utf-8'))
+        event.event_host_pwd = encpwd
         event.save()
 
-        subject = 'Event Registration '
-        message = 'Thank you for registering your event with us.' \
-                  f'\n\nEvent Name : {event.event_name}' \
-                  f'\nEvent Id : {event.id}' \
-                  '\n\nYou can now review the participants of your event through our portal.' \
-                  '\n\n\n\n\n\n\nTeam GameOn'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = ['nawog85659@aiclbd.com', ]
 
-        send_mail(subject, message, email_from, recipient_list)
-    return render(request, 'registration.html')
+
+        messages.success(request, 'Your registration is successful kindly check your email for more information.')
+        return render(request, 'home.html')
+    else:
+        return render(request, 'registration.html')
 
 
 def participantsReg(request):
     eventdata = EventReg.objects.filter(event_deadline__gte=datetime.datetime.now())
     events = {
-        "events": eventdata,
-        "error": 'You have already registered to this event'
+        "events": eventdata
     }
     if request.method == "POST":
         event = EventReg.objects.get(id=request.POST['event'])
@@ -58,32 +58,54 @@ def participantsReg(request):
         participants.reg_type = request.POST['regtype']
         participants.nop = request.POST['tot']
 
-        checkparticipant = Participant.objects.filter(name=participants.name, email=participants.email,reg_event=participants.reg_event)
+        checkparticipant = Participant.objects.filter(name=participants.name, email=participants.email, reg_event=participants.reg_event)
 
         if checkparticipant:
+            messages.warning(request, 'You have already been registered to this event!!')
             return render(request, 'participants.html', events)
+        else:
+            participants.save()
 
 
-        #client = Client()
-        message = client.messages \
-            .create(
-            body="""\nThank you"""+participants.name+""" for registering your participation with us.
-                    
-            Participation ID:"""+str(participants.id)+"""
-            Event Name : """+event.event_name+"""
-            Location : """+event.event_loc+"""
-            Time : """+str(event.event_stdate)+"""-"""+str(event.event_endate)+""""
-            No. of people : """+str(participants.nop)+"""
-                    
-            -GameOn""",
-            from_='+15185030699',
-            to='+91'+str(participants.contact)
-        )
-        participants.save()
-
-
-    return render(request, 'participants.html', {'events': event2})
+        messages.success(request, 'Your registration is successful kindly check your phone for more information. ')
+        return render(request, 'home.html')
+    else:
+        return render(request, 'participants.html', events)
 
 
 def dashboardLogin(request):
+    if request.method == 'POST':
+
+        try:
+            usercredential = EventReg.objects.get(id=request.POST['eventid'])
+        except ObjectDoesNotExist:
+            messages.warning(request, 'Invalid Id')
+            return render(request, 'dashboardlogin.html')
+
+        if usercredential.verifylogin(request.POST['psw']):
+            participants = Participant.objects.filter(reg_event=usercredential.event_name)
+            request.session['user_name'] = usercredential.event_host_email
+            if participants:
+                messages.success(request, 'Login Successful')
+                return render(request, 'dashboardlogin.html',  {"participant": participants})
+            else:
+                messages.warning(request, 'There are no participants in this event')
+                return render(request, 'dashboardlogin.html')
+        else:
+            messages.warning(request, 'Invalid password!!')
+            return render(request, 'dashboardlogin.html')
+
     return render(request, 'dashboardlogin.html')
+
+def dashboardLogout(request):
+    if 'user_name' in request.session:
+        messages.success(request, 'You are logged out')
+        del request.session['user_name']
+        return render(request, 'home.html')
+    else:
+        return render(request, 'home.html')
+
+
+
+
+

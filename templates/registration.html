@@ -108,7 +108,7 @@ function chkValidation()
     var emailval = /^([a-zA-Z0-9]+)([a-zA-Z.\d]*)@([a-zA-Z]{2,10})\.([a-zA-Z]{2,10})(\.[a-zA-Z]{2,10})?$/;
     var pswval = /(?=.*\d)(?=.*[a-zA-Z]).{6,}/;
     var nameval = /^[a-zA-Z\s]{3,50}$/;
-    var locval = /^[a-zA-Z\s]{5,50}$/;
+    var locval = /^[a-zA-Z\s]{5,500}$/;
     var selectedDate = new Date(sdate)
     var selectedDL = new Date(dldate)
 
@@ -127,7 +127,7 @@ function chkValidation()
      if(!nameval.test(name))
      {
         document.getElementById('eName').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
-        document.getElementById('evMsg').innerHTML="Please enter only alphabetical letters (5-50).";
+        document.getElementById('evMsg').innerHTML="Please enter only alphabetical letters (3-50).";
         flag=false;
      }
      else
@@ -151,7 +151,7 @@ function chkValidation()
      if(!locval.test(loc))
      {
          document.getElementById('eLocation').style.cssText="border:1px solid #ce5454;box-shadow:0 0 4px -2px #ce5454;";
-        document.getElementById('locMsg').innerHTML="Please enter only alphabetical letters (5-50).";
+        document.getElementById('locMsg').innerHTML="Please enter only alphabetical letters (3-50).";
         flag=false;
      }
      else

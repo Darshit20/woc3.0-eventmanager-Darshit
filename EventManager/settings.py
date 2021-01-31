@@ -104,13 +104,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-US'
 
 TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = False
 
@@ -128,9 +128,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Google SMTP
 
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = ''
-# EMAIL_HOST_PASSWORD = ''
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+#Password Hashing
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+
+]
